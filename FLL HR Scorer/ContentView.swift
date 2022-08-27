@@ -15,13 +15,13 @@ struct ContentView: View {
     @State var scores = [[Int]]()
     
     // Timer vars
-    @State private var timer = [0, 0, 0]
-    @State private var buttonsDisabled = [false, true, true]
-    @State private var running = false
-    @State private var tempClock = 0
-    @State private var fontSize: CGFloat = 30
-    @State private var userClock = [2, 30]
-    @State private var notes: NSMutableAttributedString = NSMutableAttributedString(string: "Enter some text")
+    @State var fontSize: CGFloat = 30
+    @State var userClock = [2, 30]
+    @State var notes: NSMutableAttributedString = NSMutableAttributedString(string: "Enter some text")
+    
+    // Custom scorer vars
+    @State var latestScore = 0
+    @State var latestTime = 0
     
     var body: some View {
         NavigationView {
@@ -30,7 +30,7 @@ struct ContentView: View {
                     Text("No config file found")
                         .foregroundColor(.red)
                         .onAppear {
-                            m = loadMissions(fileName: "FLL", fileType: "json") ?? [Mission]()
+                            m = loadMissions(fileName: "FLL", fileType: "json")
                         }
                 }
                 
@@ -47,7 +47,7 @@ struct ContentView: View {
                 })
                 
                 NavigationLink(destination: {
-                    CustomScorerView(m: $m)
+                    CustomScorerView(m: $m, latestScore: $latestScore, latestTime: $latestTime)
                 }, label: {
                     HStack {
                         Spacer()
@@ -57,7 +57,7 @@ struct ContentView: View {
                 })
                 
                 NavigationLink(destination: {
-                    TimerView(timer: $timer, buttonsDisabled: $buttonsDisabled, running: $running, tempClock: $tempClock, fontSize: $fontSize, userClock: $userClock, notes: $notes)
+                    TimerView(fontSize: $fontSize, userClock: $userClock, notes: $notes)
                 }, label: {
                     HStack {
                         Spacer()
@@ -97,7 +97,7 @@ struct ContentView: View {
         }
     }
     
-    func loadMissions(fileName: String, fileType: String) -> [Mission]? {
+    func loadMissions(fileName: String, fileType: String) -> [Mission] {
         do {
             if let bundlePath = Bundle.main.path(forResource: fileName, ofType: fileType),
                let jsonData = try String(contentsOfFile: bundlePath).data(using: .utf8) {
@@ -117,6 +117,6 @@ struct ContentView: View {
             print(error.localizedDescription)
         }
         
-        return nil
+        return [Mission]()
     }
 }

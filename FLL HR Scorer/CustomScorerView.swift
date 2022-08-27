@@ -5,92 +5,225 @@
 //  Created by Matej Volkmer on 19.08.2022.
 //
 
+// TODO: Pridat poznamky na konec
+
 import SwiftUI
 
+var feedback =  UIImpactFeedbackGenerator.FeedbackStyle.medium
+var timeOut = 100
+var timer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
+
 struct CustomScorerView: View {
-    @State private var sumPoints = 0
-    @State private var variation = 1
-    @State private var lastPoints = 0
-    @State private var timeRemaining = 15000
-    @State private var currentId = 0
-    @State private var state = 0
-    @State private var feedback =  UIImpactFeedbackGenerator.FeedbackStyle.medium
-    @State private var timeOut = 100
+    @State var sumPoints = 0
+    @State var variation = 1
+    @State var lastPoints = [0]
+    @State var timeRemaining = 15000
+    @State var currentRun = 0
+    @State var currentMission = 0
+    @State var currentId = 0
+    @State var state = 0
+    @State var runs = [Run]()
+    @State var runRunning = false
+    @State var runsScores = [0]
+    @State var times = [Int]()
         
     @Binding var m: [Mission]
-    
-    var timer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
+    @Binding var latestScore: Int
+    @Binding var latestTime: Int
     
     var body: some View {
-        VStack {
-            HStack {
+        if runs.isEmpty {
+            Text("Load runs failed")
+            .onAppear {
+                runs = loadRuns(fileName: "RUNS", fileType: "json")
+                for _ in runs {
+                    runsScores.append(0)
+                }
+            }
+            .navigationTitle("Scorer")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(false)
+        } else if state == 0 {
+            VStack(spacing: 20) {
+                Text("Last time: \(String(format: "%.2f", (Float(latestTime) / 100.0))) s")
+                Text("Last score: \(latestScore) p")
+                
+                Button("Start") {
+                    let impactMed = UIImpactFeedbackGenerator(style: feedback)
+                    impactMed.impactOccurred()
+                    
+                    state = 1
+                    runRunning = true
+                    timeRemaining = 150 * 100
+                    times.append(timeRemaining)
+                }
+                .onAppear {
+                    sumPoints = 0
+                    variation = 1
+                    lastPoints = [0]
+                    timeRemaining = 15000
+                    currentRun = 0
+                    currentMission = 0
+                    currentId = 0
+                    state = 0
+                    runRunning = false
+                    runsScores = [0]
+                    times = [Int]()
+                    
+                    for _ in runs {
+                        runsScores.append(0)
+                    }
+                }
+            }
+            .navigationTitle("Scorer")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(false)
+        } else if state == 1 {
+            VStack {
+                TimerRowView(sumPoints: $sumPoints, variation: $variation, lastPoints: $lastPoints, timeRemaining: $timeRemaining, currentRun: $currentRun, currentMission: $currentMission, state: $state, runs: $runs, runsScores: $runsScores)
+                    .frame(height: 63)
+                
+                Color(runs[currentId].color)
+                    .frame(height: 200)
+                    .padding(40)
+                
+                Text(runs[currentId].name)
+                    .font(.title)
+                
+                Button(runRunning ? "End" : "Start") {
+                    let impactMed = UIImpactFeedbackGenerator(style: feedback)
+                    impactMed.impactOccurred()
+                    
+                    times.append(timeRemaining)
+                    times[times.count-2] -= timeRemaining
+                    
+                    if runRunning {
+                        currentId += 1
+                    }
+                    
+                    runRunning.toggle()
+                    
+                    if currentId >= runs.count {
+                        timer.upstream.connect().cancel()
+                        times.removeLast()
+                        state = 2
+                    }
+                }
+                .buttonStyle(BigButtonStyle(backgroundColor: Color(white: 0.9), foregroundColor: .blue, width: 300))
+                
+                Spacer()
+                
+                if times.count > 1 {
+                    Text("\(runRunning ? "Ex" : "Run") \(String(format: "%.2f", (Float(times[times.count-2]) / 100.0))) s")
+                }
+                
+            }
+            .onReceive(timer) { _ in
+                timeRemaining -= 1
+                if timeRemaining < 0 {
+                    timeOut = -100
+                } else {
+                    timeOut = 100
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(true)
+            .navigationBarBackButtonHidden(true)
+        } else if state == 2 {
+            VStack {
+                TimerRowView(sumPoints: $sumPoints, variation: $variation, lastPoints: $lastPoints, timeRemaining: $timeRemaining, currentRun: $currentRun, currentMission: $currentMission, state: $state, runs: $runs, runsScores: $runsScores)
+                
+                Spacer()
+                
+                MissionView(m: $m[runs[currentRun].missionIDs[currentMission]],
+                    variation: runs[currentRun].scoreIDs[currentMission], onDone: { points in
+                    lastPoints.append(points)
+                    sumPoints += points
+                    runsScores[currentRun] += points
+                    
+                    if currentMission < runs[currentRun].missionIDs.count-1 {
+                        currentMission += 1
+                    } else if currentRun < runs.count-1 {
+                        currentRun += 1
+                        currentMission = 0
+                    } else {
+                        latestTime = times.reduce(0, +)
+                        latestScore = sumPoints
+                        state = 3
+                    }
+                })
+                
+                Text("\(sumPoints) points")
+                Text("\(currentRun + 1)/\(runs.count)")
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(true)
+            .navigationBarBackButtonHidden(true)
+        } else if state == 3 {
+            VStack(spacing: 20) {
+                Text("End")
+                Text("Current time: \(String(format: "%.2f", (Float(times.reduce(0, +)) / 100.0))) s")
+                Text("Current score: \(runsScores.reduce(0, +)) p")
+                Button("Save") {
+                    let impactMed = UIImpactFeedbackGenerator(style: feedback)
+                    impactMed.impactOccurred()
+                    
+                    print("save custom")
+                    // TODO: Dodelat ukladani skore
+                }
+                .buttonStyle(BorderedButtonStyle())
                 Button("Reset") {
                     let impactMed = UIImpactFeedbackGenerator(style: feedback)
                     impactMed.impactOccurred()
                     
-                    timeRemaining = 150 * 100
-                    currentId = 0
-                    // Reset vseho
+                    state = 0
                 }
-                
-                Text(String(format:"%02i:%02i", Int(timeRemaining / timeOut) / 60 % 60, Int(timeRemaining / timeOut) % 60))
-                    .font(.system(size: 50, weight: .bold, design: .monospaced))
-                    .frame(width: 200)
-                    .foregroundColor(timeOut < 0 ? .red : .blue)
-                
-                Button("Undo") {
-                    let impactMed = UIImpactFeedbackGenerator(style: feedback)
-                    impactMed.impactOccurred()
-                    
-                    currentId -= 1
-                    // Reset vseho
-                }
-                .disabled(currentId < 1)
+                .buttonStyle(BorderedButtonStyle())
             }
-            .frame(height: 60)
-            
-            Rectangle()
-                .foregroundColor(.blue)
-                .frame(width: CGFloat(3 * timeRemaining / 100), height: 3)
-            
-            Spacer()
-            
-            MissionView(m: $m[currentId], variation: $variation, lastPoints: $lastPoints, onDone: { points in
-                sumPoints += points
-                variation = 1
-                lastPoints = 0
-                currentId += 1
-                // Reset vseho
-            })
-            
-            Text("\(currentId + 1)/\(m.count)")
+            .navigationTitle("Scorer")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(false)
         }
-            
-    //        Group {
-    //            if i > m.count - 1 {
-    //                Text("End")
-    //                    .onAppear {
-    //                        print(sumPoints)
-    //                    }
-    //                    .navigationTitle("Custom scorer")
-    //                    .navigationBarTitleDisplayMode(.inline)
-    //            } else {
-    //                VStack {
-//                        MissionView(m: $m[i], variation: $variation, lastPoints: $lastPoints, onDone: { points in
-//                            sumPoints += points
-//                            variation = 1
-//                            lastPoints = 0
-//                            i += 1
-//                        })
-    //                }
-    //                .navigationBarBackButtonHidden(true)
-    //            }
-    //        }
+    }
+    
+    func loadRuns(fileName: String, fileType: String) -> [Run] {
+        do {
+            if let bundlePath = Bundle.main.path(forResource: fileName, ofType: fileType),
+               let jsonData = try String(contentsOfFile: bundlePath).data(using: .utf8) {
+                let runs = try JSONDecoder().decode([Run].self, from: jsonData)
+                
+                return runs
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        return [Run]()
     }
 }
 
 struct CustomScorerView_Previews: PreviewProvider {
     static var previews: some View {
-        CustomScorerView(m: .constant([Mission(id: 1, name: "Test", description: "descirption", score: [Score(id: 1, desc: "tag", tags: ["0", "1", "2"], points: [10, 10, 10])])]))
+        NavigationView {
+            CustomScorerView(m: .constant([Mission(id: 1, name: "Test", description: "descirption", score: [Score(id: 1, desc: "tag", tags: ["0", "1", "2"], points: [10, 10, 10])])]), latestScore: .constant(1), latestTime: .constant(10))
+        }
+    }
+}
+
+struct BigButtonStyle: ButtonStyle {
+    var backgroundColor: Color
+    var foregroundColor: Color
+    var width: CGFloat? = nil
+    
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(20)
+            .frame(width: width)
+            .foregroundColor(foregroundColor)
+            .font(.largeTitle)
+            .background(backgroundColor)
+            .clipShape(Capsule())
+            .scaleEffect(configuration.isPressed ? 1.2 : 1)
+            .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
     }
 }

@@ -7,18 +7,15 @@
 
 import SwiftUI
 
-var feedback =  UIImpactFeedbackGenerator.FeedbackStyle.medium
-
 struct MissionView: View {
     @Binding var m: Mission
-    @Binding var variation: Int
-    @Binding var lastPoints: Int
+    var variation: Int
     
     var onDone: (Int) -> ()
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
-            Image("\(m.name)-\(variation).jpeg")
+            Image("\(m.name).jpeg")
                 .resizable()
                 .frame(width: 300, height: 200)
                 .border(.gray, width: 1)
@@ -41,14 +38,14 @@ struct MissionView: View {
                             let impactMed = UIImpactFeedbackGenerator(style: feedback)
                             impactMed.impactOccurred()
                             
-                            onClick(0)
+                            onDone(0)
                         }.buttonStyle(BorderedButtonStyle())
                         
                         Button("YES") {
                             let impactMed = UIImpactFeedbackGenerator(style: feedback)
                             impactMed.impactOccurred()
                             
-                            onClick(m.score[variation - 1].points.first!)
+                            onDone(m.score[variation - 1].points.first!)
                         }
                         .buttonStyle(BorderedButtonStyle())
                     }
@@ -60,7 +57,7 @@ struct MissionView: View {
                                 let impactMed = UIImpactFeedbackGenerator(style: feedback)
                                 impactMed.impactOccurred()
                                 
-                                onClick(m.score[variation - 1].points.sumArr())
+                                onDone(m.score[variation - 1].points.sumArr())
                             }
                             .buttonStyle(BorderedButtonStyle())
                         }
@@ -73,7 +70,7 @@ struct MissionView: View {
                                 let impactMed = UIImpactFeedbackGenerator(style: feedback)
                                 impactMed.impactOccurred()
                                 
-                                onClick(m.score[variation - 1].points[m.score[variation - 1].tags.firstIndex(of: tag)!])
+                                onDone(m.score[variation - 1].points[m.score[variation - 1].tags.firstIndex(of: tag)!])
                             }
                             .buttonStyle(BorderedButtonStyle())
                         }
@@ -83,26 +80,11 @@ struct MissionView: View {
             .padding()
         }
     }
-    
-    func onClick(_ points: Int) {
-        if m.score.count == variation {
-            onDone(points + lastPoints)
-            
-        } else {
-            variation += 1
-            lastPoints += points
-            
-            if variation > m.score.count {
-                variation = 1
-                onDone(points)
-            }
-        }
-    }
 }
 
 struct MissionView_Previews: PreviewProvider {
     static var previews: some View {
-        MissionView(m: .constant(Mission(id: 1, name: "Test", description: "descirption", score: [Score(id: 1, desc: "tag", tags: ["0", "1", "2"], points: [10, 10, 10])])), variation: .constant(1), lastPoints: .constant(0), onDone: { _ in })
+        MissionView(m: .constant(Mission(id: 1, name: "Test", description: "descirption", score: [Score(id: 1, desc: "tag", tags: ["0", "1", "2"], points: [10, 10, 10])])), variation: 1, onDone: { _ in })
     }
 }
 

@@ -5,6 +5,8 @@
 //  Created by Matej Volkmer on 12.08.2022.
 //
 
+// TODO: Pridat poznamky
+
 import SwiftUI
 
 @main

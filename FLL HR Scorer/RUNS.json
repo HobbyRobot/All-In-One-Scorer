@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "name": "Red run",
+        "color": "red",
+        "missionIDs": [1, 2, 2, 3, 3, 4, 4],
+        "scoreIDs":   [1, 1, 2, 1, 2, 1, 2]
+    },
+    {
+        "id": 2,
+        "name": "Blue run",
+        "color": "blue",
+        "missionIDs": [5, 5, 6, 6, 7],
+        "scoreIDs":   [1, 2, 1, 2, 1]
+    },
+    {
+        "id": 3,
+        "name": "Green run",
+        "color": "green",
+        "missionIDs": [8, 8, 9, 9, 10, 10],
+        "scoreIDs":   [1, 2, 1, 2,  1,  2]
+    },
+    {
+        "id": 4,
+        "name": "Yellow run",
+        "color": "yellow",
+        "missionIDs": [11, 12, 12, 13, 14, 14],
+        "scoreIDs":   [ 1,  1,  2,  1,  1,  2]
+    },
+    {
+        "id": 5,
+        "name": "Black run",
+        "color": "black",
+        "missionIDs": [15, 16, 0],
+        "scoreIDs":   [ 1,  1, 1]
+    }
+]

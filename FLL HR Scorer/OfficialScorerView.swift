@@ -90,13 +90,15 @@ struct OfficialScorerView: View {
         .navigationBarTitle("Official scorer")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            scores = userSelection
-            
-            userSelection[0][0] = m[0].score[0].points[0]
-            scores[0][0] = m[0].score[0].points[0]
-            
-            userSelection[userSelection.count-1][0] = m[m.count-1].score[0].points.count-1
-            scores[scores.count-1][0] = m[m.count-1].score[0].points.last!
+            if scores.isEmpty {
+                scores = userSelection
+
+                userSelection[0][0] = m[0].score[0].points[0]
+                scores[0][0] = m[0].score[0].points[0]
+
+                userSelection[userSelection.count-1][0] = m[m.count-1].score[0].points.count-1
+                scores[scores.count-1][0] = m[m.count-1].score[0].points.last!
+            }
         }
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
@@ -106,6 +108,7 @@ struct OfficialScorerView: View {
                     Spacer()
                     Button("Save") {
                         print(scores.joined().reduce(0, +))
+                        // TODO: Dodelat ukladani skore
                     }
                     .buttonStyle(BorderedButtonStyle())
                 }

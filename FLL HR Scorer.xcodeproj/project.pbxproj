@@ -19,6 +19,9 @@
 		D2F7CEC028B299D000BB00C9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F7CEBF28B299D000BB00C9 /* SettingsView.swift */; };
 		D2F7CEC228B29A0000BB00C9 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F7CEC128B29A0000BB00C9 /* TimerView.swift */; };
 		D2F7CEC428B6A73900BB00C9 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F7CEC328B6A73900BB00C9 /* StatsView.swift */; };
+		D2F7CEE428BA816900BB00C9 /* RUNS.json in Resources */ = {isa = PBXBuildFile; fileRef = D2F7CEE328BA816900BB00C9 /* RUNS.json */; };
+		D2F7CEE628BA836300BB00C9 /* RunModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F7CEE528BA836300BB00C9 /* RunModel.swift */; };
+		D2F7CEE828BA8C6800BB00C9 /* TimerRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F7CEE728BA8C6800BB00C9 /* TimerRowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +38,9 @@
 		D2F7CEBF28B299D000BB00C9 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D2F7CEC128B29A0000BB00C9 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		D2F7CEC328B6A73900BB00C9 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		D2F7CEE328BA816900BB00C9 /* RUNS.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = RUNS.json; sourceTree = "<group>"; };
+		D2F7CEE528BA836300BB00C9 /* RunModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunModel.swift; sourceTree = "<group>"; };
+		D2F7CEE728BA8C6800BB00C9 /* TimerRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerRowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,12 +75,15 @@
 			children = (
 				D2E648F228A6CEDB00178B8E /* FLL_HR_ScorerApp.swift */,
 				D2986A3128ABC03500D7602D /* FLL.json */,
+				D2F7CEE328BA816900BB00C9 /* RUNS.json */,
 				D2E648F428A6CEDB00178B8E /* ContentView.swift */,
 				D2F7CEC128B29A0000BB00C9 /* TimerView.swift */,
 				D2986A3E28B0035D00D7602D /* OfficialScorerView.swift */,
 				D2986A4028B0036400D7602D /* CustomScorerView.swift */,
+				D2F7CEE728BA8C6800BB00C9 /* TimerRowView.swift */,
 				D2986A3328ABC06300D7602D /* MissionView.swift */,
 				D2986A3828ABC23300D7602D /* MissionModel.swift */,
+				D2F7CEE528BA836300BB00C9 /* RunModel.swift */,
 				D2F7CEC328B6A73900BB00C9 /* StatsView.swift */,
 				D2F7CEBF28B299D000BB00C9 /* SettingsView.swift */,
 				D2E648F628A6CEDE00178B8E /* Assets.xcassets */,
@@ -150,6 +159,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2986A3228ABC03500D7602D /* FLL.json in Resources */,
+				D2F7CEE428BA816900BB00C9 /* RUNS.json in Resources */,
 				D2E648FA28A6CEDE00178B8E /* Preview Assets.xcassets in Resources */,
 				D2E648F728A6CEDE00178B8E /* Assets.xcassets in Resources */,
 			);
@@ -171,6 +181,8 @@
 				D2F7CEC228B29A0000BB00C9 /* TimerView.swift in Sources */,
 				D2986A3428ABC06300D7602D /* MissionView.swift in Sources */,
 				D2F7CEC428B6A73900BB00C9 /* StatsView.swift in Sources */,
+				D2F7CEE828BA8C6800BB00C9 /* TimerRowView.swift in Sources */,
+				D2F7CEE628BA836300BB00C9 /* RunModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,6 +317,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -334,6 +347,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (

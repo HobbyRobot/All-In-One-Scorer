@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct TimerView: View {
-    @Binding var timer: [Int]
-    @Binding var buttonsDisabled: [Bool]
-    @Binding var running: Bool
-    @Binding var tempClock: Int
     @Binding var fontSize: CGFloat
     @Binding var userClock: [Int]
     @Binding var notes: NSMutableAttributedString //= NSMutableAttributedString(string: "Enter some text")
+    
+    @State private var tempClock = 0
+    @State private var timer = [0, 0, 0]
+    @State private var buttonsDisabled = [false, true, true]
+    @State private var running = false
     
     let fontSizes: [CGFloat] = [60, 24]
     var clock = Timer.publish(every: 0.01, on: .main, in: .default).autoconnect()
@@ -95,21 +96,28 @@ struct TimerView: View {
                             .frame(width: 130)
                             .clipped()
                         }
-                        .onAppear {
-                            tempClock = (userClock[0] * 60 + userClock[1]) * 100
-                        }
-                        .onChange(of: userClock) { _ in
-                            tempClock = (userClock[0] * 60 + userClock[1]) * 100
-                        }
                                             
                         Button("Save as default") {
                             print("save as default")
+                            // TODO: Dodelat ukladani default timeru
                         }
                         .offset(x: 0, y: -40)
                     }
                 }
                 
                 Spacer()
+                    .onDisappear {
+                        tempClock = (userClock[0] * 60 + userClock[1]) * 100
+                        running = false
+                        buttonsDisabled = [false, true, true]
+                        timer = [0, 0, 0]
+                    }
+                    .onAppear {
+                        tempClock = (userClock[0] * 60 + userClock[1]) * 100
+                    }
+                    .onChange(of: userClock) { _ in
+                        tempClock = (userClock[0] * 60 + userClock[1]) * 100
+                    }
                 
                 Button(action: {
                     if tempClock == 0 {
@@ -175,7 +183,7 @@ struct TimerView_Previews: PreviewProvider {
     @State var notes: NSMutableAttributedString = NSMutableAttributedString(string: "Enter some text")
     
     static var previews: some View {
-        TimerView(timer: .constant([0, 0, 0]), buttonsDisabled: .constant([false, true, true]), running: .constant(false), tempClock: .constant(0), fontSize: .constant(30), userClock: .constant([0, 30]), notes: .constant(NSMutableAttributedString(string: "Enter some text")))
+        TimerView(fontSize: .constant(30), userClock: .constant([0, 30]), notes: .constant(NSMutableAttributedString(string: "Enter some text")))
     }
 }
 
