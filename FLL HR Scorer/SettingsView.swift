@@ -5,8 +5,6 @@
 //  Created by Matej Volkmer on 21.08.2022.
 //
 
-// TODO: dodelat user nastaveni
-
 import SwiftUI
 
 struct SettingsView: View {

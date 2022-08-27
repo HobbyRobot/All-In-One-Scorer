@@ -5,8 +5,6 @@
 //  Created by Matej Volkmer on 19.08.2022.
 //
 
-// TODO: Pridat poznamky na konec
-
 import SwiftUI
 
 var feedback =  UIImpactFeedbackGenerator.FeedbackStyle.medium
@@ -25,11 +23,15 @@ struct CustomScorerView: View {
     @State var runs = [Run]()
     @State var runRunning = false
     @State var runsScores = [0]
-    @State var times = [Int]()
+    @State var times = [0]
+    @State var notes = "Add some notes..."
+    @State var maxScores = [Int]()
+    @State var showShare = false
         
     @Binding var m: [Mission]
     @Binding var latestScore: Int
     @Binding var latestTime: Int
+    @Binding var savedData: String
     
     var body: some View {
         if runs.isEmpty {
@@ -39,6 +41,7 @@ struct CustomScorerView: View {
                 for _ in runs {
                     runsScores.append(0)
                 }
+                maxScores = getMaxScores()
             }
             .navigationTitle("Scorer")
             .navigationBarTitleDisplayMode(.inline)
@@ -68,7 +71,8 @@ struct CustomScorerView: View {
                     state = 0
                     runRunning = false
                     runsScores = [0]
-                    times = [Int]()
+                    times = [0]
+                    notes = "Add some notes..."
                     
                     for _ in runs {
                         runsScores.append(0)
@@ -80,7 +84,7 @@ struct CustomScorerView: View {
             .navigationBarHidden(false)
         } else if state == 1 {
             VStack {
-                TimerRowView(sumPoints: $sumPoints, variation: $variation, lastPoints: $lastPoints, timeRemaining: $timeRemaining, currentRun: $currentRun, currentMission: $currentMission, state: $state, runs: $runs, runsScores: $runsScores)
+                TimerRowView(sumPoints: $sumPoints, lastPoints: $lastPoints, timeRemaining: $timeRemaining, currentRun: $currentRun, currentMission: $currentMission, state: $state, runs: $runs, runsScores: $runsScores)
                     .frame(height: 63)
                 
                 Color(runs[currentId].color)
@@ -131,7 +135,7 @@ struct CustomScorerView: View {
             .navigationBarBackButtonHidden(true)
         } else if state == 2 {
             VStack {
-                TimerRowView(sumPoints: $sumPoints, variation: $variation, lastPoints: $lastPoints, timeRemaining: $timeRemaining, currentRun: $currentRun, currentMission: $currentMission, state: $state, runs: $runs, runsScores: $runsScores)
+                TimerRowView(sumPoints: $sumPoints, lastPoints: $lastPoints, timeRemaining: $timeRemaining, currentRun: $currentRun, currentMission: $currentMission, state: $state, runs: $runs, runsScores: $runsScores)
                 
                 Spacer()
                 
@@ -161,17 +165,50 @@ struct CustomScorerView: View {
             .navigationBarBackButtonHidden(true)
         } else if state == 3 {
             VStack(spacing: 20) {
+                Spacer()
+                
+                TextEditor(text: $notes)
+                    .frame(width: 300, height: 200)
+                    .padding()
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.gray, lineWidth: 1)
+                    )
+                
+                Spacer()
+                
                 Text("End")
                 Text("Current time: \(String(format: "%.2f", (Float(times.reduce(0, +)) / 100.0))) s")
                 Text("Current score: \(runsScores.reduce(0, +)) p")
+                
                 Button("Save") {
                     let impactMed = UIImpactFeedbackGenerator(style: feedback)
                     impactMed.impactOccurred()
                     
-                    print("save custom")
-                    // TODO: Dodelat ukladani skore
+                    savedData = saveData()
+                    
+                    print(savedData) // TODO: ulozit na server
                 }
                 .buttonStyle(BorderedButtonStyle())
+                
+                Button(action: {
+                    let impactMed = UIImpactFeedbackGenerator(style: feedback)
+                    impactMed.impactOccurred()
+                    
+                    if savedData == "" {
+                        savedData = saveData()
+                    }
+
+                    showShare.toggle()
+                }, label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.largeTitle)
+                        .padding(40)
+                })
+                .sheet(isPresented: $showShare, content: {
+                    ActivityViewController(itemsToShare: [savedData])
+                })
+                
                 Button("Reset") {
                     let impactMed = UIImpactFeedbackGenerator(style: feedback)
                     impactMed.impactOccurred()
@@ -179,11 +216,54 @@ struct CustomScorerView: View {
                     state = 0
                 }
                 .buttonStyle(BorderedButtonStyle())
+                
+                Spacer()
             }
+            .ignoresSafeArea(.keyboard)
             .navigationTitle("Scorer")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarHidden(false)
         }
+    }
+    
+    func getMaxScores() -> [Int] {
+        var maxScores = [Int]()
+        
+        for r in runs {
+            maxScores.append(0)
+            
+            for i in 0..<r.missionIDs.count {
+                let variation = r.scoreIDs[i]
+                let mm = r.missionIDs[i]
+                
+                if m[mm].score[variation-1].tags.isEmpty {
+                    maxScores[maxScores.count-1] += m[mm].score[variation-1].points[0]
+                } else if m[mm].score[variation-1].tags.last!.isInt {
+                    maxScores[maxScores.count-1] += m[mm].score[variation-1].points.reduce(0, +)
+                } else {
+                    maxScores[maxScores.count-1] += m[mm].score[variation-1].points.last!
+                }
+            }
+        }
+        
+        return maxScores
+    }
+    
+    func saveData() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        
+        var output = "id;RobotGame;\(formatter.string(from: Date()));"
+        
+        for i in 0..<runs.count {
+            output += "\(Float(times[i*2]) / 100.0);\(Float(times[i*2+1]) / 100.0);"
+            output += "\(runsScores[i]);\(maxScores[i]);"
+        }
+        
+        output += "bonus;xd;\(notes)" // TODO: Dodelat bonus
+        // TODO: moznost predelat desetiny tecky na carky
+        
+        return output
     }
     
     func loadRuns(fileName: String, fileType: String) -> [Run] {
@@ -205,7 +285,7 @@ struct CustomScorerView: View {
 struct CustomScorerView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            CustomScorerView(m: .constant([Mission(id: 1, name: "Test", description: "descirption", score: [Score(id: 1, desc: "tag", tags: ["0", "1", "2"], points: [10, 10, 10])])]), latestScore: .constant(1), latestTime: .constant(10))
+            CustomScorerView(m: .constant([Mission(id: 1, name: "Test", description: "descirption", score: [Score(id: 1, desc: "tag", tags: ["0", "1", "2"], points: [10, 10, 10])])]), latestScore: .constant(1), latestTime: .constant(10), savedData: .constant(""))
         }
     }
 }
@@ -226,4 +306,16 @@ struct BigButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 1.2 : 1)
             .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
     }
+}
+
+struct ActivityViewController: UIViewControllerRepresentable {
+    var itemsToShare: [Any]
+    var servicesToShareItem: [UIActivity]? = nil
+    
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityViewController>) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: itemsToShare, applicationActivities: servicesToShareItem)
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityViewController>) {}
 }

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TimerRowView: View {
     @Binding var sumPoints: Int
-    @Binding var variation: Int
     @Binding var lastPoints: [Int]
     @Binding var timeRemaining: Int
     @Binding var currentRun: Int

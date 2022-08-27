@@ -17,11 +17,12 @@ struct ContentView: View {
     // Timer vars
     @State var fontSize: CGFloat = 30
     @State var userClock = [2, 30]
-    @State var notes: NSMutableAttributedString = NSMutableAttributedString(string: "Enter some text")
+    @State var notes: NSMutableAttributedString = NSMutableAttributedString(string: "Enter some text...")
     
     // Custom scorer vars
     @State var latestScore = 0
     @State var latestTime = 0
+    @State var savedData = ""
     
     var body: some View {
         NavigationView {
@@ -47,7 +48,7 @@ struct ContentView: View {
                 })
                 
                 NavigationLink(destination: {
-                    CustomScorerView(m: $m, latestScore: $latestScore, latestTime: $latestTime)
+                    CustomScorerView(m: $m, latestScore: $latestScore, latestTime: $latestTime, savedData: $savedData)
                 }, label: {
                     HStack {
                         Spacer()

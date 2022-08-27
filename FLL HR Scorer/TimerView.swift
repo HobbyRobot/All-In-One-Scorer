@@ -26,12 +26,12 @@ struct TimerView: View {
                 ZStack(alignment: .bottomTrailing) {
                     HStack {
                         Button(action: {
-                            fontSize += 1
+                            fontSize += 2
                         }, label: {
                             Image(systemName: "plus.circle")
                         })
                         Button(action: {
-                            fontSize -= 1
+                            fontSize -= 2
                         }, label: {
                             Image(systemName: "minus.circle")
                         })
