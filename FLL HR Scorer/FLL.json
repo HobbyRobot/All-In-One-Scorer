@@ -1,0 +1,284 @@
+[
+    {
+        "id": 0,
+        "name": "EQUIPMENT INSPECTION",
+        "description": "If your robot and all your equipment fit completely in one launch area and are under a height limit.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "Fits comlpetely",
+                "tags": [],
+                "points": [20]
+            }
+        ]
+    },
+    {
+        "id": 1,
+        "name": "INNOVATION PROJECT MODEL",
+        "description": "Deliver your Innovation Project model to the hydrogen plant target area.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "Is partly in hydrogen plant",
+                "tags": [],
+                "points": [10]
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "OIL PLATFORM",
+        "description": "Pump the oil so that the fuel units load into the fuel truck, and then deliver the fuel truck to the fueling station.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "FUs are in",
+                "tags": ["0", "1", "2", "3"],
+                "points": [0, 5, 5, 5]
+            },
+            {
+                "id": 2,
+                "desc": "Truck is over station",
+                "tags": [],
+                "points": [10]
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "ENERGY STORAGE",
+        "description": "Load energy units into the energy storage bin and then release the stored energy unit from the tray under the model.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "EUs completely in bin",
+                "tags": ["0", "1", "2", "3"],
+                "points": [0, 10, 10, 10]
+            },
+            {
+                "id": 2,
+                "desc": "EU completely out of tray",
+                "tags": [],
+                "points": [10]
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "name": "SOLAR FARM",
+        "description": "Start the distribution of the energy units by moving them off their positions on the mat.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "EUs completely removed",
+                "tags": ["0", "1", "2", "3"],
+                "points": [0, 5, 5, 5]
+            },
+            {
+                "id": 2,
+                "desc": "All three are removed",
+                "tags": [],
+                "points": [5]
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "name": "SMART GRID",
+        "description": "Raise your field’s orange connector to complete the smart grid connection with the opposite field.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "Your orange connector is raised",
+                "tags": [],
+                "points": [20]
+            },
+            {
+                "id": 2,
+                "desc": "Other orange connector is raised",
+                "tags": ["Not in online event"],
+                "points": [10]
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "name": "HYBRID CAR",
+        "description": "Recharge the hybrid car by inserting the hybrid unit into the car.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "Car is not touching ramp",
+                "tags": [],
+                "points": [10]
+            },
+            {
+                "id": 2,
+                "desc": "HU is in car",
+                "tags": [],
+                "points": [10]
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "name": "WIND TURBINE",
+        "description": "Release the energy units from the wind turbine.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "EUs not touching wind turbine",
+                "tags": ["0", "1", "2", "3"],
+                "points": [0, 10, 10, 10]
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "name": "WATCH TELEVISION",
+        "description": "Raise the television screen and move the energy unit to the television slot.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "TV is completely raised",
+                "tags": [],
+                "points": [10]
+            },
+            {
+                "id": 2,
+                "desc": "EU is completely in green slot",
+                "tags": [],
+                "points": [10]
+            }
+        ]
+    },
+    {
+        "id": 9,
+        "name": "DINOSAUR TOY",
+        "description": "Insert an energy unit or a rechargeable battery into the dinosaur toy to make it work.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "Dinosaur is in left home",
+                "tags": [],
+                "points": [10]
+            },
+            {
+                "id": 2,
+                "desc": "Is lid completely closed",
+                "tags": ["No", "EU in", "RB in"],
+                "points": [0, 10, 20]
+            }
+        ]
+    },
+    {
+        "id": 10,
+        "name": "POWER PLANT",
+        "description": "Release the three energy units from the power plant.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "EUs completely removed",
+                "tags": ["0", "1", "2", "3"],
+                "points": [0, 5, 5, 5]
+            },
+            {
+                "id": 2,
+                "desc": "All three are removed",
+                "tags": [],
+                "points": [5]
+            }
+        ]
+    },
+    {
+        "id": 11,
+        "name": "HYDROELECTRIC DAM",
+        "description": "Send the water unit from the top of the hydroelectric dam into the turbine wheel to release the energy unit.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "EU is not touching dam",
+                "tags": [],
+                "points": [20]
+            }
+        ]
+    },
+    {
+        "id": 12,
+        "name": "WATER RESERVOIR",
+        "description": "Place the looped water units from the river above and below the dam into the water reservoir or onto the red hooks.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "LWUs completely in reservoir mat",
+                "tags": ["0", "1", "2", "3"],
+                "points": [0, 5, 5, 5]
+            },
+            {
+                "id": 2,
+                "desc": "Hooks with LWU",
+                "tags": ["None", "One", "Two"],
+                "points": [0, 10, 20]
+            }
+        ]
+    },
+    {
+        "id": 13,
+        "name": "POWER-TO-X",
+        "description": "Deliver energy units to the hydrogen plant target area.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "EUs completely in hydrogen plant",
+                "tags": ["0", "1", "2", "3"],
+                "points": [0, 5, 5, 5]
+            }
+        ]
+    },
+    {
+        "id": 14,
+        "name": "TOY FACTORY",
+        "description": "Deliver energy units to the toy factory bin and release the mini dinosaur toy.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "EUs partly in slot or hopper",
+                "tags": ["0", "1", "2", "3"],
+                "points": [0, 5, 5, 5]
+            },
+            {
+                "id": 2,
+                "desc": "Mini dinosaur toy has been released",
+                "tags": [],
+                "points": [10]
+            }
+        ]
+    },
+    {
+        "id": 15,
+        "name": "RECHARGEABLE BATTERY",
+        "description": "Deliver energy units to the rechargeable battery target area.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "EUs completely in RB target",
+                "tags": ["0", "1", "2", "3"],
+                "points": [0, 5, 5, 5]
+            }
+        ]
+    },
+    {
+        "id": 16,
+        "name": "PRECISION TOKENS",
+        "description": "You begin the match with six precision tokens worth 50 free points. If you interrupt the robot outside of home, the referee removes one token.",
+        "score": [
+            {
+                "id": 1,
+                "desc": "Points for number of tokens",
+                "tags": ["0 t", "1 t", "2 t", "3 t", "4 t", "5 t", "6 t"],
+                "points": [0, 10, 15, 25, 35, 50, 50]
+            }
+        ]
+    }
+]
+
