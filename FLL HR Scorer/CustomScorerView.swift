@@ -38,6 +38,7 @@ struct CustomScorerView: View {
             Text("Load runs failed")
             .onAppear {
                 runs = loadRuns(fileName: "RUNS", fileType: "json")
+//                runs = [Run(id: 1, name: "red", color: "red", missionIDs: [1], scoreIDs: [1])]
                 for _ in runs {
                     runsScores.append(0)
                 }
@@ -60,6 +61,7 @@ struct CustomScorerView: View {
                     timeRemaining = 150 * 100
                     times.append(timeRemaining)
                 }
+                .buttonStyle(BorderedButtonStyle())
                 .onAppear {
                     sumPoints = 0
                     variation = 1
@@ -136,15 +138,25 @@ struct CustomScorerView: View {
         } else if state == 2 {
             VStack {
                 TimerRowView(sumPoints: $sumPoints, lastPoints: $lastPoints, timeRemaining: $timeRemaining, currentRun: $currentRun, currentMission: $currentMission, state: $state, runs: $runs, runsScores: $runsScores)
+                    .frame(height: 100)
+                    .zIndex(10000)
+               
+                Image("M\(m[runs[currentRun].missionIDs[currentMission]].id)")
+                    .resizable()
+                    .scaledToFill()
+                    .padding()
+                    .frame(height: 300)
+                    .clipped()
+                    .border(.gray, width: 1)
                 
-                Spacer()
+                Color.clear
                 
                 MissionView(m: $m[runs[currentRun].missionIDs[currentMission]],
                     variation: runs[currentRun].scoreIDs[currentMission], onDone: { points in
                     lastPoints.append(points)
                     sumPoints += points
                     runsScores[currentRun] += points
-                    
+
                     if currentMission < runs[currentRun].missionIDs.count-1 {
                         currentMission += 1
                     } else if currentRun < runs.count-1 {

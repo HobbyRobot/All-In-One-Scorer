@@ -25,9 +25,11 @@ struct OfficialScorerView: View {
 
                     Text(mission.description)
 
-                    Image("\(mission.name).jpeg")
+                    Image("M\(mission.id)")
                         .resizable()
-                        .frame(height: 150)
+                        .scaledToFill()
+                        .frame(height: 240)
+                        .clipped()
                         .border(.gray, width: 1)
 
                     ForEach(Array(zip(mission.score.indices, mission.score)), id: \.0) { j, score in
@@ -162,7 +164,7 @@ struct OfficialScorerView: View {
 
 struct OfficialScorerView_Previews: PreviewProvider {
     static var previews: some View {
-        OfficialScorerView(m: .constant([Mission]()), userSelection: .constant([[Int]]()), sumPoints: .constant(0), scores: .constant([[0]]))
+        OfficialScorerView(m: .constant([Mission(id: 6, name: "test", description: "test", score: [Score(id: 1, desc: "test", tags: [], points: [20])])]), userSelection: .constant([[0]]), sumPoints: .constant(0), scores: .constant([[0]]))
     }
 }
 
