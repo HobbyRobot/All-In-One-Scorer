@@ -30,14 +30,12 @@ struct MissionView: View {
                 // Yes or No
                 HStack {
                     Button("NO") {
-                        let impactMed = UIImpactFeedbackGenerator(style: feedback)
                         impactMed.impactOccurred()
                         
                         onDone(0)
                     }.buttonStyle(BorderedButtonStyle())
                     
                     Button("YES") {
-                        let impactMed = UIImpactFeedbackGenerator(style: feedback)
                         impactMed.impactOccurred()
                         
                         onDone(m.score[variation - 1].points.first!)
@@ -49,7 +47,6 @@ struct MissionView: View {
                 HStack {
                     ForEach(m.score[variation - 1].tags, id: \.self) { tag in
                         Button(tag) {
-                            let impactMed = UIImpactFeedbackGenerator(style: feedback)
                             impactMed.impactOccurred()
                             
                             onDone(m.score[variation - 1].points.sumArr())
@@ -62,7 +59,6 @@ struct MissionView: View {
                 HStack {
                     ForEach(m.score[variation - 1].tags, id: \.self) { tag in
                         Button(tag) {
-                            let impactMed = UIImpactFeedbackGenerator(style: feedback)
                             impactMed.impactOccurred()
                             
                             onDone(m.score[variation - 1].points[m.score[variation - 1].tags.firstIndex(of: tag)!])

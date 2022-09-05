@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D27D334F28C12F0100E864E4 /* TestImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27D334E28C12F0100E864E4 /* TestImage.swift */; };
 		D2986A3228ABC03500D7602D /* FLL.json in Resources */ = {isa = PBXBuildFile; fileRef = D2986A3128ABC03500D7602D /* FLL.json */; };
 		D2986A3428ABC06300D7602D /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2986A3328ABC06300D7602D /* MissionView.swift */; };
 		D2986A3928ABC23400D7602D /* MissionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2986A3828ABC23300D7602D /* MissionModel.swift */; };
@@ -26,7 +25,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D27D334E28C12F0100E864E4 /* TestImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImage.swift; sourceTree = "<group>"; };
 		D2986A3128ABC03500D7602D /* FLL.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FLL.json; sourceTree = "<group>"; };
 		D2986A3328ABC06300D7602D /* MissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionView.swift; sourceTree = "<group>"; };
 		D2986A3828ABC23300D7602D /* MissionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionModel.swift; sourceTree = "<group>"; };
@@ -81,7 +79,6 @@
 				D2E648F428A6CEDB00178B8E /* ContentView.swift */,
 				D2F7CEC128B29A0000BB00C9 /* TimerView.swift */,
 				D2986A3E28B0035D00D7602D /* OfficialScorerView.swift */,
-				D27D334E28C12F0100E864E4 /* TestImage.swift */,
 				D2986A4028B0036400D7602D /* CustomScorerView.swift */,
 				D2F7CEE728BA8C6800BB00C9 /* TimerRowView.swift */,
 				D2986A3328ABC06300D7602D /* MissionView.swift */,
@@ -176,7 +173,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2F7CEC028B299D000BB00C9 /* SettingsView.swift in Sources */,
-				D27D334F28C12F0100E864E4 /* TestImage.swift in Sources */,
 				D2986A3928ABC23400D7602D /* MissionModel.swift in Sources */,
 				D2986A4128B0036400D7602D /* CustomScorerView.swift in Sources */,
 				D2E648F528A6CEDB00178B8E /* ContentView.swift in Sources */,

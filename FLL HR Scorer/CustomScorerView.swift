@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-var feedback =  UIImpactFeedbackGenerator.FeedbackStyle.medium
 var timeOut = 100
 var timer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
 
@@ -15,7 +14,7 @@ struct CustomScorerView: View {
     @State var sumPoints = 0
     @State var variation = 1
     @State var lastPoints = [0]
-    @State var timeRemaining = 15000
+    @State var timeRemaining = 0
     @State var currentRun = 0
     @State var currentMission = 0
     @State var currentId = 0
@@ -24,41 +23,44 @@ struct CustomScorerView: View {
     @State var runRunning = false
     @State var runsScores = [0]
     @State var times = [0]
-    @State var notes = "Add some notes..."
+    @State var notes = ""
     @State var maxScores = [Int]()
     @State var showShare = false
-        
+    
     @Binding var m: [Mission]
     @Binding var latestScore: Int
     @Binding var latestTime: Int
     @Binding var savedData: String
+    @Binding var strings: [String]
+    @Binding var timerSeconds: Int
+    @Binding var addNotes: Bool
+    @Binding var dateFormat: String
+    @Binding var ouputScheme: String
     
     var body: some View {
         if runs.isEmpty {
             Text("Load runs failed")
-            .onAppear {
-                runs = loadRuns(fileName: "RUNS", fileType: "json")
-//                runs = [Run(id: 1, name: "red", color: "red", missionIDs: [1], scoreIDs: [1])]
-                for _ in runs {
-                    runsScores.append(0)
+                .onAppear {
+                    runs = loadRuns(fileName: "RUNS", fileType: "json")
+                    for _ in runs {
+                        runsScores.append(0)
+                    }
+                    maxScores = getMaxScores()
                 }
-                maxScores = getMaxScores()
-            }
-            .navigationTitle("Scorer")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarHidden(false)
+                .navigationTitle("Scorer")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarHidden(false)
         } else if state == 0 {
             VStack(spacing: 20) {
                 Text("Last time: \(String(format: "%.2f", (Float(latestTime) / 100.0))) s")
                 Text("Last score: \(latestScore) p")
                 
                 Button("Start") {
-                    let impactMed = UIImpactFeedbackGenerator(style: feedback)
                     impactMed.impactOccurred()
                     
                     state = 1
                     runRunning = true
-                    timeRemaining = 150 * 100
+                    timeRemaining = timerSeconds * 100
                     times.append(timeRemaining)
                 }
                 .buttonStyle(BorderedButtonStyle())
@@ -66,7 +68,7 @@ struct CustomScorerView: View {
                     sumPoints = 0
                     variation = 1
                     lastPoints = [0]
-                    timeRemaining = 15000
+                    timeRemaining = timerSeconds * 100
                     currentRun = 0
                     currentMission = 0
                     currentId = 0
@@ -74,7 +76,7 @@ struct CustomScorerView: View {
                     runRunning = false
                     runsScores = [0]
                     times = [0]
-                    notes = "Add some notes..."
+                    notes = addNotes ? "Add some notes..." : ""
                     
                     for _ in runs {
                         runsScores.append(0)
@@ -96,8 +98,7 @@ struct CustomScorerView: View {
                 Text(runs[currentId].name)
                     .font(.title)
                 
-                Button(runRunning ? "End" : "Start") {
-                    let impactMed = UIImpactFeedbackGenerator(style: feedback)
+                Button(runRunning ? strings[0] : strings[1]) {
                     impactMed.impactOccurred()
                     
                     times.append(timeRemaining)
@@ -120,7 +121,7 @@ struct CustomScorerView: View {
                 Spacer()
                 
                 if times.count > 1 {
-                    Text("\(runRunning ? "Ex" : "Run") \(String(format: "%.2f", (Float(times[times.count-2]) / 100.0))) s")
+                    Text("\(runRunning ? strings[2] : strings[3]) \(String(format: "%.2f", (Float(times[times.count-2]) / 100.0))) s")
                 }
                 
             }
@@ -140,7 +141,7 @@ struct CustomScorerView: View {
                 TimerRowView(sumPoints: $sumPoints, lastPoints: $lastPoints, timeRemaining: $timeRemaining, currentRun: $currentRun, currentMission: $currentMission, state: $state, runs: $runs, runsScores: $runsScores)
                     .frame(height: 100)
                     .zIndex(10000)
-               
+                
                 Image("M\(m[runs[currentRun].missionIDs[currentMission]].id)")
                     .resizable()
                     .scaledToFill()
@@ -152,11 +153,11 @@ struct CustomScorerView: View {
                 Color.clear
                 
                 MissionView(m: $m[runs[currentRun].missionIDs[currentMission]],
-                    variation: runs[currentRun].scoreIDs[currentMission], onDone: { points in
+                            variation: runs[currentRun].scoreIDs[currentMission], onDone: { points in
                     lastPoints.append(points)
                     sumPoints += points
                     runsScores[currentRun] += points
-
+                    
                     if currentMission < runs[currentRun].missionIDs.count-1 {
                         currentMission += 1
                     } else if currentRun < runs.count-1 {
@@ -179,38 +180,42 @@ struct CustomScorerView: View {
             VStack(spacing: 20) {
                 Spacer()
                 
-                TextEditor(text: $notes)
-                    .frame(width: 300, height: 200)
-                    .padding()
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.gray, lineWidth: 1)
-                    )
-                
-                Spacer()
+                if addNotes {
+                    TextEditor(text: $notes)
+                        .frame(width: 300, height: 200)
+                        .padding()
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.gray, lineWidth: 1)
+                        )
+                    
+                    Spacer()
+                }
                 
                 Text("End")
                 Text("Current time: \(String(format: "%.2f", (Float(times.reduce(0, +)) / 100.0))) s")
                 Text("Current score: \(runsScores.reduce(0, +)) p")
+                    .onAppear {
+                        savedData = saveData()
+                    }
                 
                 Button("Save") {
-                    let impactMed = UIImpactFeedbackGenerator(style: feedback)
                     impactMed.impactOccurred()
                     
                     savedData = saveData()
                     
                     print(savedData) // TODO: ulozit na server
+                    // TODO: Settings kam
                 }
                 .buttonStyle(BorderedButtonStyle())
                 
                 Button(action: {
-                    let impactMed = UIImpactFeedbackGenerator(style: feedback)
                     impactMed.impactOccurred()
                     
                     if savedData == "" {
                         savedData = saveData()
                     }
-
+                    
                     showShare.toggle()
                 }, label: {
                     Image(systemName: "square.and.arrow.up")
@@ -222,7 +227,6 @@ struct CustomScorerView: View {
                 })
                 
                 Button("Reset") {
-                    let impactMed = UIImpactFeedbackGenerator(style: feedback)
                     impactMed.impactOccurred()
                     
                     state = 0
@@ -263,18 +267,16 @@ struct CustomScorerView: View {
     
     func saveData() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        
+        formatter.dateFormat = dateFormat
+        // TODO: Settings var outputScheme
         var output = "id;RobotGame;\(formatter.string(from: Date()));"
-        
         for i in 0..<runs.count {
             output += "\(Float(times[i*2]) / 100.0);\(Float(times[i*2+1]) / 100.0);"
             output += "\(runsScores[i]);\(maxScores[i]);"
         }
-        
         output += "bonus;xd;\(notes)" // TODO: Dodelat bonus
-        // TODO: moznost predelat desetiny tecky na carky
-        
+        output = output.replacingOccurrences(of: ",", with: ".")
+        // TODO: Dodelat funkcne
         return output
     }
     
@@ -291,14 +293,6 @@ struct CustomScorerView: View {
         }
         
         return [Run]()
-    }
-}
-
-struct CustomScorerView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            CustomScorerView(m: .constant([Mission(id: 1, name: "Test", description: "descirption", score: [Score(id: 1, desc: "tag", tags: ["0", "1", "2"], points: [10, 10, 10])])]), latestScore: .constant(1), latestTime: .constant(10), savedData: .constant(""))
-        }
     }
 }
 

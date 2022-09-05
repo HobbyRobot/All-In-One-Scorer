@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+let store = UserDefaults.standard
+let impactMed = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.medium)
+
 @main
 struct FLL_HR_ScorerApp: App {
     var body: some Scene {

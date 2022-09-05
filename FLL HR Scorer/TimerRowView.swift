@@ -24,7 +24,6 @@ struct TimerRowView: View {
                     Spacer()
                     
                     Button("Reset") {
-                        let impactMed = UIImpactFeedbackGenerator(style: feedback)
                         impactMed.impactOccurred()
                         
                         state = 0
@@ -36,7 +35,6 @@ struct TimerRowView: View {
                         .foregroundColor(timeOut < 0 ? .red : .blue)
                     
                     Button("Undo") {
-                        let impactMed = UIImpactFeedbackGenerator(style: feedback)
                         impactMed.impactOccurred()
                         
                         if currentMission > 0 {

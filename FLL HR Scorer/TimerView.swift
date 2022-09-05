@@ -10,7 +10,7 @@ import SwiftUI
 struct TimerView: View {
     @Binding var fontSize: CGFloat
     @Binding var userClock: [Int]
-    @Binding var notes: NSMutableAttributedString //= NSMutableAttributedString(string: "Enter some text")
+    @Binding var notes: NSMutableAttributedString 
     
     @State private var tempClock = 0
     @State private var timer = [0, 0, 0]
@@ -98,8 +98,8 @@ struct TimerView: View {
                         }
                                             
                         Button("Save as default") {
-                            print("save as default")
-                            // TODO: Dodelat ukladani default timeru
+                            store.set(userClock[0], forKey: "timer-clock-minutes")
+                            store.set(userClock[1], forKey: "timer-clock-seconds")
                         }
                         .offset(x: 0, y: -40)
                     }

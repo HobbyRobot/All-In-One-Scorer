@@ -12,6 +12,10 @@ struct OfficialScorerView: View {
     @Binding var userSelection: [[Int]]
     @Binding var sumPoints: Int
     @Binding var scores: [[Int]]
+    @Binding var selectedSeasonOfficial: String // TODO: Add multiple seasons
+    @Binding var defaultMissions: String
+    @Binding var defaultOnStart: Bool
+    @Binding var defaultOnReset: Bool
     
     var body: some View {
         Form {
@@ -94,12 +98,15 @@ struct OfficialScorerView: View {
         .onAppear {
             if scores.isEmpty {
                 scores = userSelection
-
-                userSelection[0][0] = m[0].score[0].points[0]
-                scores[0][0] = m[0].score[0].points[0]
-
-                userSelection[userSelection.count-1][0] = m[m.count-1].score[0].points.count-1
-                scores[scores.count-1][0] = m[m.count-1].score[0].points.last!
+                
+                if defaultOnStart {
+                    for ii in defaultMissions.components(separatedBy: [",", "."]) {
+                        if let i = Int(ii) {
+                            userSelection[i][0] = m[i].score[0].points.last!
+                            scores[i][0] = m[i].score[0].points.last!
+                        }
+                    }
+                }
             }
         }
         .toolbar {
@@ -126,11 +133,14 @@ struct OfficialScorerView: View {
                             }
                         }
                         
-                        userSelection[0][0] = m[0].score[0].points[0]
-                        scores[0][0] = m[0].score[0].points[0]
-                        
-                        userSelection[userSelection.count-1][0] = 6
-                        scores[scores.count-1][0] = 50
+                        if defaultOnReset {
+                            for ii in defaultMissions.components(separatedBy: [",", "."]) {
+                                if let i = Int(ii) {
+                                    userSelection[i][0] = m[i].score[0].points.last!
+                                    scores[i][0] = m[i].score[0].points.last!
+                                }
+                            }
+                        }
                     }
 
                     Button("Max") {
@@ -159,12 +169,6 @@ struct OfficialScorerView: View {
                 }
             }
         }
-    }
-}
-
-struct OfficialScorerView_Previews: PreviewProvider {
-    static var previews: some View {
-        OfficialScorerView(m: .constant([Mission(id: 6, name: "test", description: "test", score: [Score(id: 1, desc: "test", tags: [], points: [20])])]), userSelection: .constant([[0]]), sumPoints: .constant(0), scores: .constant([[0]]))
     }
 }
 
