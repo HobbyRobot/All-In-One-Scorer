@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     let seasonsToChoose = ["Current season"] // TODO: Add multiple seasons
     let runsToChoose = ["RUNS.json"] // TODO: Add multiple runs possibility
+    @FocusState private var fieldIsFocused: Bool
     
     // Timer vars
     @Binding var fontSize: CGFloat
@@ -101,6 +102,7 @@ struct SettingsView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 150)
                         .keyboardType(.decimalPad)
+                        .focused($fieldIsFocused)
                 }
             }
             
@@ -126,10 +128,17 @@ struct SettingsView: View {
                 }.disabled(true)
                 NavigationLink("Set aliases") {
                     List {
-                        ForEach($strings, id: \.self) { s in
-                            Section(header: Text("Enter alias")) {
-                                TextField("", text: s)
-                            }
+                        Section(header: Text("Enter alias")) {
+                            TextField("", text: $strings[0])
+                        }
+                        Section(header: Text("Enter alias")) {
+                            TextField("", text: $strings[1])
+                        }
+                        Section(header: Text("Enter alias")) {
+                            TextField("", text: $strings[2])
+                        }
+                        Section(header: Text("Enter alias")) {
+                            TextField("", text: $strings[3])
                         }
                     }
                     .listStyle(GroupedListStyle())
@@ -151,6 +160,7 @@ struct SettingsView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 100)
                         .keyboardType(.numberPad)
+                        .focused($fieldIsFocused)
                 }
                 Toggle("Show notes at end", isOn: $addNotes)
                 HStack {
@@ -182,6 +192,8 @@ struct SettingsView: View {
                         .frame(width: 150)
                 }
             }
+            
+            Color.clear.frame(height: 300) // TODO: tohle dodelat
         }
         .autocapitalization(.sentences)
         .disableAutocorrection(true)
@@ -192,6 +204,11 @@ struct SettingsView: View {
         .toolbar {
             Button("Save") {
                 applySettings()
+            }
+        }
+        .onTapGesture(count: 2) {
+            if fieldIsFocused {
+                fieldIsFocused = false
             }
         }
     }
@@ -227,4 +244,11 @@ struct SettingsView_Previews: PreviewProvider {
             SettingsView(fontSize: .constant(30.0), userClock: .constant([2, 30]), selectedSeasonOfficial: .constant("Current Season"), defaultMissions: .constant(""), defaultOnStart: .constant(true), defaultOnReset: .constant(false), selectedSeasonCustom: .constant("Current Season"), selectedRuns: .constant("RUNS.json"), strings: .constant(["End", "Start", "Ex", "Ride"]), timerSeconds: .constant("150"), addNotes: .constant(true), dateFormat: .constant("mm.DD.yyyy"), ouputScheme: .constant("neco"))
         }
     }
+}
+
+extension View {
+  func endTextEditing() {
+    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                                    to: nil, from: nil, for: nil)
+  }
 }
