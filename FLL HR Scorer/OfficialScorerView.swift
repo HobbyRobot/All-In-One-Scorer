@@ -102,8 +102,10 @@ struct OfficialScorerView: View {
                 if defaultOnStart {
                     for ii in defaultMissions.components(separatedBy: [",", "."]) {
                         if let i = Int(ii) {
-                            userSelection[i][0] = m[i].score[0].points.last!
-                            scores[i][0] = m[i].score[0].points.last!
+                            if i < m.count {
+                                userSelection[i][0] = m[i].score[0].points.last!
+                                scores[i][0] = m[i].score[0].points.last!
+                            }
                         }
                     }
                 }
@@ -136,8 +138,10 @@ struct OfficialScorerView: View {
                         if defaultOnReset {
                             for ii in defaultMissions.components(separatedBy: [",", "."]) {
                                 if let i = Int(ii) {
-                                    userSelection[i][0] = m[i].score[0].points.last!
-                                    scores[i][0] = m[i].score[0].points.last!
+                                    if i < m.count {
+                                        userSelection[i][0] = m[i].score[0].points.last!
+                                        scores[i][0] = m[i].score[0].points.last!
+                                    }
                                 }
                             }
                         }

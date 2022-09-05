@@ -32,7 +32,7 @@ struct CustomScorerView: View {
     @Binding var latestTime: Int
     @Binding var savedData: String
     @Binding var strings: [String]
-    @Binding var timerSeconds: Int
+    @Binding var timerSeconds: String
     @Binding var addNotes: Bool
     @Binding var dateFormat: String
     @Binding var ouputScheme: String
@@ -60,7 +60,7 @@ struct CustomScorerView: View {
                     
                     state = 1
                     runRunning = true
-                    timeRemaining = timerSeconds * 100
+                    timeRemaining = (Int(timerSeconds) ?? 1) * 100
                     times.append(timeRemaining)
                 }
                 .buttonStyle(BorderedButtonStyle())
@@ -68,7 +68,7 @@ struct CustomScorerView: View {
                     sumPoints = 0
                     variation = 1
                     lastPoints = [0]
-                    timeRemaining = timerSeconds * 100
+                    timeRemaining = (Int(timerSeconds) ?? 1) * 100
                     currentRun = 0
                     currentMission = 0
                     currentId = 0

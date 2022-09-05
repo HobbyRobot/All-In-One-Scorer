@@ -13,7 +13,7 @@ struct ContentView: View {
     @State var userSelection = [[Int]]()
     @State var scores = [[Int]]()
     @State var sumPoints = 0
-    @State var selectedSeasonOfficial = store.string(forKey: "official-selected-season") ?? "Current" // _Settings
+    @State var selectedSeasonOfficial = store.string(forKey: "official-selected-season") ?? "Current Season" // _Settings
     @State var defaultMissions = store.string(forKey: "official-default-missions") ?? "" // _Settings
     @State var defaultOnStart = store.bool(forKey: "official-default-on-start") // _Settings
     @State var defaultOnReset = store.bool(forKey: "official-default-on-reset") // _Settings
@@ -27,14 +27,14 @@ struct ContentView: View {
     @State var latestScore = 0
     @State var latestTime = 0
     @State var savedData = ""
-    @State var selectedSeasonCustom = store.string(forKey: "custom-selected-season") ?? "Current" // _Settings
+    @State var selectedSeasonCustom = store.string(forKey: "custom-selected-season") ?? "Current Season" // _Settings
     @State var selectedRuns = store.string(forKey: "custom-selected-runs") ?? "RUNS.json" // _Settings
     @State var strings = [ // _Settings
         store.string(forKey: "custom-run-end") ?? "End",
         store.string(forKey: "custom-run-start") ?? "Start",
         store.string(forKey: "custom-attachment") ?? "Ex",
         store.string(forKey: "custom-run") ?? "Run"]
-    @State var timerSeconds = store.integer(forKey: "custom-timer-seconds") // _Settings
+    @State var timerSeconds = store.string(forKey: "custom-timer-seconds") ?? "150" // _Settings
     @State var addNotes = store.bool(forKey: "custom-add-notes") // _Settings
     @State var dateFormat = store.string(forKey: "custom-date-format") ?? "dd.MM.yyyy" // _Settings
     @State var outputScheme = store.string(forKey: "custom-output-scheme") ?? "neco" // _Settings

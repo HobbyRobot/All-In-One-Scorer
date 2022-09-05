@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View {
-    let seasonsToChoose = ["Current"] // TODO: Add multiple seasons
+    let seasonsToChoose = ["Current season"] // TODO: Add multiple seasons
     let runsToChoose = ["RUNS.json"] // TODO: Add multiple runs possibility
     
     // Timer vars
@@ -25,7 +25,7 @@ struct SettingsView: View {
     @Binding var selectedSeasonCustom: String // TODO: Add multiple seasons
     @Binding var selectedRuns: String
     @Binding var strings: [String]
-    @Binding var timerSeconds: Int
+    @Binding var timerSeconds: String
     @Binding var addNotes: Bool
     @Binding var dateFormat: String
     @Binding var ouputScheme: String // TODO: Dodelat funkcne
@@ -39,28 +39,38 @@ struct SettingsView: View {
                     Spacer()
                     Stepper("\(Int(fontSize))", onIncrement: {
                         if fontSize < 50 { fontSize += 2 }
-                        store.set(fontSize, forKey: "timer-font-size")
                     }, onDecrement: {
                         if fontSize > 10 { fontSize -= 2 }
-                        store.set(fontSize, forKey: "timer-font-size")
                     })
                     .frame(width: 160)
                 }
                 HStack {
                     Text("Minutes")
                     Spacer()
-                    TextField("Enter timer minutes", text: $userClock[0].toString())
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .frame(width: 200)
-                        .keyboardType(.numberPad)
+                    Stepper("\(Int(userClock[0]))", onIncrement: {
+                        if userClock[0] < 59 { userClock[0] += 1 }
+                    }, onDecrement: {
+                        if userClock[0] > 0 { userClock[0] -= 1
+                            if userClock[0] == 0 && userClock[1] == 0 {
+                                userClock[1] = 1
+                            }
+                        }
+                    })
+                    .frame(width: 160)
                 }
                 HStack {
                     Text("Seconds")
                     Spacer()
-                    TextField("Enter timer seconds", text: $userClock[1].toString())
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .frame(width: 200)
-                        .keyboardType(.numberPad)
+                    Stepper("\(Int(userClock[1]))", onIncrement: {
+                        if userClock[1] < 59 { userClock[1] += 1 }
+                    }, onDecrement: {
+                        if userClock[1] > 0 { userClock[1] -= 1
+                            if userClock[0] == 0 && userClock[1] == 0 {
+                                userClock[1] = 1
+                            }
+                        }
+                    })
+                    .frame(width: 160)
                 }
             }
             
@@ -73,22 +83,24 @@ struct SettingsView: View {
                 })
                 Button("Add Season config") {
                     print("Add Season config")
-                    // TODO: Add Season config
+                    // TODO: Add season config
                 }.disabled(true)
                 Toggle("Default on start", isOn: $defaultOnStart)
                 Toggle("Default on reset", isOn: $defaultOnReset)
                 HStack {
                     Text("Default missions")
                     Spacer()
-                    TextField("Enter IDs", text: $defaultMissions, onEditingChanged: { _ in
-                        let filtered = defaultMissions.filter { "0123456789.,".contains($0) }
-                        if filtered != defaultMissions {
+                    TextField("Enter IDs", text: $defaultMissions)
+                        .onChange(of: defaultMissions) { newValue in
+                            var filtered = defaultMissions.filter { "0123456789.,".contains($0) }
+                            while filtered.count > 20 {
+                                _ = filtered.removeLast()
+                            }
                             defaultMissions = filtered
                         }
-                    })
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .frame(width: 150)
-                    .keyboardType(.decimalPad)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .frame(width: 150)
+                        .keyboardType(.decimalPad)
                 }
             }
             
@@ -125,7 +137,17 @@ struct SettingsView: View {
                 HStack {
                     Text("Timer seconds")
                     Spacer()
-                    TextField("Enter timer seconds", text: $timerSeconds.toString())
+                    TextField("Enter timer seconds", text: $timerSeconds)
+                        .onChange(of: timerSeconds) { newValue in
+                            let filtered = newValue.filter { "0123456789".contains($0) }
+                            if Int(filtered) ?? 0 > 500 {
+                                timerSeconds = "499"
+                            } else if filtered == "0" {
+                                timerSeconds = "1"
+                            } else {
+                                timerSeconds = filtered
+                            }
+                        }
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 100)
                         .keyboardType(.numberPad)
@@ -135,6 +157,13 @@ struct SettingsView: View {
                     Text("Date format")
                     Spacer()
                     TextField("mm.DD.yyyy", text: $dateFormat)
+                        .onChange(of: dateFormat) { newValue in
+                            var temp = newValue
+                            while temp.count > 15 {
+                                _ = temp.removeLast()
+                            }
+                            dateFormat = temp
+                        }
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 150)
                 }
@@ -142,11 +171,20 @@ struct SettingsView: View {
                     Text("Output scheme")
                     Spacer()
                     TextField("Scheme...", text: $ouputScheme)
+                        .onChange(of: ouputScheme) { newValue in
+                            var temp = newValue
+                            while temp.count > 40 {
+                                _ = temp.removeLast()
+                            }
+                            ouputScheme = temp
+                        }
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 150)
                 }
             }
         }
+        .autocapitalization(.sentences)
+        .disableAutocorrection(true)
         .pickerStyle(MenuPickerStyle())
         .onDisappear { applySettings() }
         .navigationTitle("Settings")
@@ -186,17 +224,7 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            SettingsView(fontSize: .constant(30.0), userClock: .constant([2, 30]), selectedSeasonOfficial: .constant("Current"), defaultMissions: .constant(""), defaultOnStart: .constant(true), defaultOnReset: .constant(false), selectedSeasonCustom: .constant("Current"), selectedRuns: .constant("RUNS.json"), strings: .constant(["End", "Start", "Ex", "Ride"]), timerSeconds: .constant(150), addNotes: .constant(true), dateFormat: .constant("mm.DD.yyyy"), ouputScheme: .constant("neco"))
+            SettingsView(fontSize: .constant(30.0), userClock: .constant([2, 30]), selectedSeasonOfficial: .constant("Current Season"), defaultMissions: .constant(""), defaultOnStart: .constant(true), defaultOnReset: .constant(false), selectedSeasonCustom: .constant("Current Season"), selectedRuns: .constant("RUNS.json"), strings: .constant(["End", "Start", "Ex", "Ride"]), timerSeconds: .constant("150"), addNotes: .constant(true), dateFormat: .constant("mm.DD.yyyy"), ouputScheme: .constant("neco"))
         }
     }
-}
-
-extension Binding where Value == Int {
-    public func toString() -> Binding<String> {
-            return Binding<String>(get: {
-                String(self.wrappedValue)
-            }, set: { i in
-                self.wrappedValue = Int(i) ?? 0
-            })
-        }
 }
