@@ -204,8 +204,7 @@ struct CustomScorerView: View {
                     
                     savedData = saveData()
                     
-                    print(savedData) // TODO: ulozit na server
-                    // TODO: Settings kam
+                    print(savedData) // TODO: ulozit na server, v nastaveni vybrat kam
                 }
                 .buttonStyle(BorderedButtonStyle())
                 

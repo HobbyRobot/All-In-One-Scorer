@@ -166,6 +166,7 @@ struct TimerView: View {
                 .disabled(buttonsDisabled[2])
                 .frame(width: 160)
             }
+            .padding()
         }
         .navigationTitle("Timer")
         .navigationBarTitleDisplayMode(.inline)

@@ -7,10 +7,13 @@
 
 import SwiftUI
 
+let seasonsToChoose = ["Current season"] // TODO: Add multiple seasons
+let runsToChoose = ["RUNS.json"] // TODO: Add multiple runs possibility
+let screensToChoose: [Screens?] = [nil, .Timer, .Official, .Custom]
+
 struct SettingsView: View {
-    let seasonsToChoose = ["Current season"] // TODO: Add multiple seasons
-    let runsToChoose = ["RUNS.json"] // TODO: Add multiple runs possibility
     @FocusState private var fieldIsFocused: Bool
+    @Binding var selectedScreen: Screens?
     
     // Timer vars
     @Binding var fontSize: CGFloat
@@ -29,10 +32,18 @@ struct SettingsView: View {
     @Binding var timerSeconds: String
     @Binding var addNotes: Bool
     @Binding var dateFormat: String
-    @Binding var ouputScheme: String // TODO: Dodelat funkcne
+    @Binding var outputScheme: String // TODO: Dodelat funkcne
      
     var body: some View {
         Form {
+            Section(header: Text("Default Screen")) {
+                Picker("Default screen", selection: $selectedScreen, content: {
+                    ForEach(screensToChoose, id: \.self) { season in
+                        Text(season?.rawValue ?? "None")
+                    }
+                })
+            }
+            
             // Timer
             Section(header: Text("Timer Settings")) {
                 HStack {
@@ -180,20 +191,20 @@ struct SettingsView: View {
                 HStack {
                     Text("Output scheme")
                     Spacer()
-                    TextField("Scheme...", text: $ouputScheme)
-                        .onChange(of: ouputScheme) { newValue in
+                    TextField("Scheme...", text: $outputScheme)
+                        .onChange(of: outputScheme) { newValue in
                             var temp = newValue
                             while temp.count > 40 {
                                 _ = temp.removeLast()
                             }
-                            ouputScheme = temp
+                            outputScheme = temp
                         }
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 150)
                 }
             }
             
-            Color.clear.frame(height: 300) // TODO: tohle dodelat
+//            Color.clear.frame(height: 300) // TODO: tohle dodelat
         }
         .autocapitalization(.sentences)
         .disableAutocorrection(true)
@@ -205,16 +216,51 @@ struct SettingsView: View {
             Button("Save") {
                 applySettings()
             }
+            
+            Button("Set default") {
+                setDefault()
+                applySettings()
+            }
         }
         .onTapGesture(count: 2) {
             if fieldIsFocused {
                 fieldIsFocused = false
             }
         }
+        .onAppear {
+            if fontSize < 10 {
+                setDefault()
+                applySettings()
+            }
+        }
+    }
+    
+    func setDefault() {
+        selectedScreen = nil
+        fontSize = 30
+        userClock[0] = 2
+        userClock[1] = 30
+        selectedSeasonOfficial = seasonsToChoose[0]
+        defaultMissions = "0.16"
+        defaultOnStart = true
+        defaultOnReset = true
+        selectedSeasonCustom = seasonsToChoose[0]
+        selectedRuns = runsToChoose[0]
+        timerSeconds = "150"
+        addNotes = true
+        dateFormat = "mm.DD.yyyy"
+        outputScheme = "neco"
+        strings[0] = "End"
+        strings[1] = "Start"
+        strings[2] = "Ex"
+        strings[3] = "Run"
     }
     
     func applySettings() {
+        store.set(selectedScreen?.rawValue ?? "None", forKey: "selected-screen")
+        
         // Store timer vars
+        store.set(fontSize, forKey: "timer-font-size")
         store.set(userClock[0], forKey: "timer-clock-minutes")
         store.set(userClock[1], forKey: "timer-clock-seconds")
         
@@ -230,7 +276,7 @@ struct SettingsView: View {
         store.set(timerSeconds, forKey: "custom-timer-seconds")
         store.set(addNotes, forKey: "custom-add-notes")
         store.set(dateFormat, forKey: "custom-date-format")
-        store.set(ouputScheme, forKey: "custom-output-scheme")
+        store.set(outputScheme, forKey: "custom-output-scheme")
         store.set(strings[0], forKey: "custom-run-end")
         store.set(strings[1], forKey: "custom-run-start")
         store.set(strings[2], forKey: "custom-attachment")
@@ -241,7 +287,7 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            SettingsView(fontSize: .constant(30.0), userClock: .constant([2, 30]), selectedSeasonOfficial: .constant("Current Season"), defaultMissions: .constant(""), defaultOnStart: .constant(true), defaultOnReset: .constant(false), selectedSeasonCustom: .constant("Current Season"), selectedRuns: .constant("RUNS.json"), strings: .constant(["End", "Start", "Ex", "Ride"]), timerSeconds: .constant("150"), addNotes: .constant(true), dateFormat: .constant("mm.DD.yyyy"), ouputScheme: .constant("neco"))
+            SettingsView(selectedScreen: .constant(nil), fontSize: .constant(30.0), userClock: .constant([2, 30]), selectedSeasonOfficial: .constant("Current Season"), defaultMissions: .constant(""), defaultOnStart: .constant(true), defaultOnReset: .constant(false), selectedSeasonCustom: .constant("Current Season"), selectedRuns: .constant("RUNS.json"), strings: .constant(["End", "Start", "Ex", "Ride"]), timerSeconds: .constant("150"), addNotes: .constant(true), dateFormat: .constant("mm.DD.yyyy"), outputScheme: .constant("neco"))
         }
     }
 }
@@ -251,4 +297,10 @@ extension View {
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
                                     to: nil, from: nil, for: nil)
   }
+}
+
+enum Screens: String {
+    case Timer
+    case Official
+    case Custom
 }

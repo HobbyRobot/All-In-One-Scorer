@@ -125,7 +125,7 @@ struct OfficialScorerView: View {
                 }
             }
             
-            ToolbarItemGroup(placement: .navigation) {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
                 HStack {
                     Button("Reset") {
                         for i in 0..<userSelection.count {

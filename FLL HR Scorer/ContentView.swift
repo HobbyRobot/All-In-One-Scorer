@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var selectedScreen = Screens(rawValue: store.string(forKey: "selected-screen") ?? "") // _Settings
+    @State var selectedScreenTotal: Screens? = nil
+    
     // Official scorer vars
     @State var m = [Mission]()
     @State var userSelection = [[Int]]()
@@ -47,12 +50,13 @@ struct ContentView: View {
                         .foregroundColor(.red)
                         .onAppear {
                             m = loadMissions(fileName: "FLL", fileType: "json")
+                            selectedScreenTotal = selectedScreen
                         }
                 }
                 
                 Spacer()
                 
-                NavigationLink(destination: {
+                NavigationLink(tag: Screens.Official, selection: $selectedScreenTotal, destination: {
                     OfficialScorerView(m: $m, userSelection: $userSelection, sumPoints: $sumPoints, scores: $scores, selectedSeasonOfficial: $selectedSeasonOfficial, defaultMissions: $defaultMissions, defaultOnStart: $defaultOnStart, defaultOnReset: $defaultOnReset)
                 }, label: {
                     HStack {
@@ -62,7 +66,7 @@ struct ContentView: View {
                     }
                 })
                 
-                NavigationLink(destination: {
+                NavigationLink(tag: Screens.Custom, selection: $selectedScreenTotal, destination: {
                     CustomScorerView(m: $m, latestScore: $latestScore, latestTime: $latestTime, savedData: $savedData, strings: $strings, timerSeconds: $timerSeconds, addNotes: $addNotes, dateFormat: $dateFormat, ouputScheme: $outputScheme)
                 }, label: {
                     HStack {
@@ -72,7 +76,7 @@ struct ContentView: View {
                     }
                 })
                 
-                NavigationLink(destination: {
+                NavigationLink(tag: Screens.Timer, selection: $selectedScreenTotal, destination: {
                     TimerView(fontSize: $fontSize, userClock: $userClock, notes: $notes)
                 }, label: {
                     HStack {
@@ -83,7 +87,7 @@ struct ContentView: View {
                 })
                 
                 NavigationLink(destination: {
-                    SettingsView(fontSize: $fontSize, userClock: $userClock, selectedSeasonOfficial: $selectedSeasonOfficial, defaultMissions: $defaultMissions, defaultOnStart: $defaultOnStart, defaultOnReset: $defaultOnReset, selectedSeasonCustom: $selectedSeasonCustom, selectedRuns: $selectedRuns, strings: $strings, timerSeconds: $timerSeconds, addNotes: $addNotes, dateFormat: $dateFormat, ouputScheme: $outputScheme)
+                    SettingsView(selectedScreen: $selectedScreen, fontSize: $fontSize, userClock: $userClock, selectedSeasonOfficial: $selectedSeasonOfficial, defaultMissions: $defaultMissions, defaultOnStart: $defaultOnStart, defaultOnReset: $defaultOnReset, selectedSeasonCustom: $selectedSeasonCustom, selectedRuns: $selectedRuns, strings: $strings, timerSeconds: $timerSeconds, addNotes: $addNotes, dateFormat: $dateFormat, outputScheme: $outputScheme)
                 }, label: {
                     HStack {
                         Spacer()
@@ -105,10 +109,33 @@ struct ContentView: View {
                 Spacer()
                 
                 Text("by HobbyRobot team")
+                    .padding()
             }
             .frame(width: 200)
             .buttonStyle(BorderedButtonStyle())
             .navigationTitle("All-in-one FLL scorer")
+            .onAppear {
+                if fontSize < 10 {
+                    selectedScreen = nil
+                    fontSize = 30
+                    userClock[0] = 2
+                    userClock[1] = 30
+                    selectedSeasonOfficial = seasonsToChoose[0]
+                    defaultMissions = "0.16"
+                    defaultOnStart = true
+                    defaultOnReset = true
+                    selectedSeasonCustom = seasonsToChoose[0]
+                    selectedRuns = runsToChoose[0]
+                    timerSeconds = "150"
+                    addNotes = true
+                    dateFormat = "mm.DD.yyyy"
+                    outputScheme = "neco"
+                    strings[0] = "End"
+                    strings[1] = "Start"
+                    strings[2] = "Ex"
+                    strings[3] = "Run"
+                }
+            }
         }
     }
     
