@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D2291EE728C786E700A440AA /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2291EE628C786E700A440AA /* Launch Screen.storyboard */; };
 		D2986A3228ABC03500D7602D /* FLL.json in Resources */ = {isa = PBXBuildFile; fileRef = D2986A3128ABC03500D7602D /* FLL.json */; };
 		D2986A3428ABC06300D7602D /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2986A3328ABC06300D7602D /* MissionView.swift */; };
 		D2986A3928ABC23400D7602D /* MissionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2986A3828ABC23300D7602D /* MissionModel.swift */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D2291EE628C786E700A440AA /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		D2986A3128ABC03500D7602D /* FLL.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FLL.json; sourceTree = "<group>"; };
 		D2986A3328ABC06300D7602D /* MissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionView.swift; sourceTree = "<group>"; };
 		D2986A3828ABC23300D7602D /* MissionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionModel.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 		D2E648F128A6CEDB00178B8E /* FLL HR Scorer */ = {
 			isa = PBXGroup;
 			children = (
+				D2291EE628C786E700A440AA /* Launch Screen.storyboard */,
 				D2E648F228A6CEDB00178B8E /* FLL_HR_ScorerApp.swift */,
 				D2986A3128ABC03500D7602D /* FLL.json */,
 				D2F7CEE328BA816900BB00C9 /* RUNS.json */,
@@ -161,6 +164,7 @@
 				D2986A3228ABC03500D7602D /* FLL.json in Resources */,
 				D2F7CEE428BA816900BB00C9 /* RUNS.json in Resources */,
 				D2E648FA28A6CEDE00178B8E /* Preview Assets.xcassets in Resources */,
+				D2291EE728C786E700A440AA /* Launch Screen.storyboard in Resources */,
 				D2E648F728A6CEDE00178B8E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -317,6 +321,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -324,7 +329,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.4;
+				MARKETING_VERSION = 0.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matejvvo.FLL-HR-Scorer";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -347,6 +352,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -354,7 +360,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.4;
+				MARKETING_VERSION = 0.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matejvvo.FLL-HR-Scorer";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
