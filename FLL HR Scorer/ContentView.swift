@@ -33,10 +33,10 @@ struct ContentView: View {
     @State var selectedSeasonCustom = store.string(forKey: "custom-selected-season") ?? "Current Season" // _Settings
     @State var selectedRuns = store.string(forKey: "custom-selected-runs") ?? "RUNS.json" // _Settings
     @State var strings = [ // _Settings
-        store.string(forKey: "custom-run-end") ?? "End",
-        store.string(forKey: "custom-run-start") ?? "Start",
-        store.string(forKey: "custom-attachment") ?? "Ex",
-        store.string(forKey: "custom-run") ?? "Run"]
+            store.string(forKey: "custom-run-end") ?? "End",
+            store.string(forKey: "custom-run-start") ?? "Start",
+            store.string(forKey: "custom-attachment") ?? "Ex",
+            store.string(forKey: "custom-run") ?? "Run"]
     @State var timerSeconds = store.string(forKey: "custom-timer-seconds") ?? "150" // _Settings
     @State var addNotes = store.bool(forKey: "custom-add-notes") // _Settings
     @State var dateFormat = store.string(forKey: "custom-date-format") ?? "dd.MM.yyyy" // _Settings
